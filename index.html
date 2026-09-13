@@ -106,6 +106,20 @@ textarea { resize: vertical; min-height: 100px; }
 .duck-winner-card { background: var(--card); border: 2px solid var(--brand); border-radius: 28px; padding: 40px; text-align: center; max-width: 480px; width: 90%; box-shadow: 0 25px 60px -15px rgba(13, 148, 136, 0.3); transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 #duckWinnerOverlay.show .duck-winner-card { transform: scale(1); }
 
+/* Moment / Khoanh Khac Styles */
+.moment-date-group { margin-bottom: 32px; }
+.moment-date-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
+.moment-date-header h3 { margin: 0; font-size: 18px; color: var(--brand); }
+.moment-date-badge { background: rgba(13,148,136,0.1); color: var(--brand); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.moment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.moment-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); display: flex; flex-direction: column; }
+.moment-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -15px rgba(13,148,136,0.1); border-color: var(--brand); }
+.moment-media-box { width: 100%; max-height: 260px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; position: relative; }
+.moment-media-box img, .moment-media-box video { width: 100%; height: 100%; object-fit: cover; max-height: 260px; }
+.moment-body { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.moment-text { font-size: 14px; line-height: 1.6; color: var(--text); margin-bottom: 12px; white-space: pre-wrap; word-break: break-word; }
+.moment-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; margin-top: auto; }
+
 footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;color:var(--muted);font-size:14px;margin-top:40px}
 .dark{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--muted:#94a3b8;--line:#334155;--shadow:0 10px 30px -5px rgba(0, 0, 0, 0.5)}
 .dark .top{background:rgba(30, 41, 59, 0.85)}
@@ -127,6 +141,7 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 <div class="navlinks">
   <button onclick="go('home')">🏠Trang chủ</button>
   <button onclick="go('students')">🧑‍🎓👩‍🎓Thành viên</button>
+  <button onclick="go('moments')">📸 Khoảnh khắc</button>
   <button onclick="go('randomizer')">🎲 Quay random</button>
   <button class="tool" onclick="theme()" title="Chuyển đổi giao diện sáng/tối">◐</button>
   <button class="tool" onclick="print()" title="In trang">⎙</button>
@@ -139,8 +154,24 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 <div class="card heroSide"><div class="eyebrow">GIÁO VIÊN</div><h2>Trần Thị Kim Quy</h2><p class="muted">Lớp 6C - CK35 · Năm học 2026–2027</p><button class="btn" style="margin-top:16px" onclick="go('students')">Xem 45 thành viên →</button></div></div>
 <div class="dashgrid section"><div class="card dash"><h2>Giới thiệu lớp học</h2><p class="muted">Cung cấp thông tin tổng quan, hoạt động và danh sách thành viên của lớp một cách trực quan.</p></div><div class="card dash"><h2>Hồ sơ thông tin</h2><p class="muted">Lưu trữ đầy đủ thông tin định danh và dễ dàng tra cứu trực tiếp khi cần thiết.</p></div></div>
 </section>
+
 <section id="students" class="page" style="display:none"><div class="head"><div><h2>Danh sách 45 thành viên</h2><p class="muted">Bấm vào học sinh để xem chi tiết lý lịch thông tin.</p></div></div>
 <div class="toolbar"><input id="search" class="search" placeholder="Tìm theo tên hoặc mã học sinh..." oninput="render()"><select id="gender" onchange="render()"><option value="">Tất cả giới tính</option><option>Nam</option><option>Nữ</option></select></div><div id="grid" class="grid"></div></section>
+
+<!-- Tab Khoảnh Khắc Mới Thêm -->
+<section id="moments" class="page" style="display:none">
+  <div class="head">
+    <div>
+      <h2>📸 Khoảnh Khắc Đáng Nhớ</h2>
+      <p class="muted">Chia sẻ bài viết, hình ảnh và video ghi lại những kỷ niệm đẹp của lớp, tự động phân chia theo ngày tháng năm.</p>
+    </div>
+    <button class="btn" onclick="openAddMomentModal()">➕ Thêm khoảnh khắc</button>
+  </div>
+  
+  <div id="momentsContainer">
+    <!-- Các nhóm khoảnh khắc theo ngày tháng năm sẽ hiển thị ở đây -->
+  </div>
+</section>
 
 <!-- Tab Quay Random & Trò Chơi -->
 <section id="randomizer" class="page" style="display:none">
@@ -290,6 +321,169 @@ const STUDENTS=[
   {stt:45,name:"Nguyễn Diệp Vy",code:"2602230523",vemis:"-",moet:"-",regBook:"-",dob:"01/10/2015",entryDate:"18/08/2026",gender:"Nữ",nation:"Việt Nam",address:"Khối Long Sơn 2, Phường Thái Hòa, Nghệ An",hometown:"Khối Long Sơn 2, Phường Thái Hòa, Nghệ An",birthPlace:"Bệnh viện đa khoa khu vực Tây Bắc Nghệ An, Phường Tây Hiếu, Nghệ An",origin:"Xã Tân Châu, Nghệ An",birthReg:"Phường Thái Hòa, Nghệ An",cccd:"040315006968",cccdDate:"16/07/2024",cccdPlace:"Bộ Công an",ethnic:"Kinh",religion:"Không",policy:"Không",nearPoor:"Không",unionMember:"Không",teamMember:"Không",fatherName:"Nguyễn Thanh Tuấn",fatherJob:"Bảo vệ",fatherYear:"1983",motherName:"Thái Thị Dung",motherJob:"Công nhân",motherYear:"1982",phoneSll:"0386740507",emailSll:"0986722981",phoneDad:"0386740507",phoneMom:"Không",phoneHs:"Không",disability:"Không",boarding:"-",note:"-"}
 ];
 
+// --- DỮ LIỆU KHOẢNH KHẮC (Lưu trên localStorage) ---
+let MOMENTS = JSON.parse(localStorage.getItem('class6c_moments')) || [
+  {id: 1, text: "Khai giảng năm học mới đầy hào hứng của lớp 6C!", date: "2026-09-02", type: "img", url: "1000018411.jpg"}
+];
+
+function saveMoments(){
+  localStorage.setItem('class6c_moments', JSON.stringify(MOMENTS));
+}
+
+function renderMoments(){
+  let container = document.getElementById('momentsContainer');
+  if(!container) return;
+
+  if(MOMENTS.length === 0){
+    container.innerHTML = `<div class="card" style="padding:40px; text-align:center;"><p class="muted">Chưa có khoảnh khắc nào được đăng tải. Hãy bấm "Thêm khoảnh khắc" để bắt đầu!</p></div>`;
+    return;
+  }
+
+  // Sắp xếp các khoảnh khắc theo ngày giảm dần (mới nhất lên trên)
+  let sorted = [...MOMENTS].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  // Nhóm theo ngày-tháng-năm
+  let groups = {};
+  sorted.forEach(m => {
+    let dKey = m.date; // định dạng YYYY-MM-DD
+    if(!groups[dKey]) groups[dKey] = [];
+    groups[dKey].push(m);
+  });
+
+  let html = '';
+  for(let dateKey in groups){
+    let items = groups[dateKey];
+    // Chuyển đổi định dạng hiển thị ngày đẹp hơn (DD/MM/YYYY)
+    let parts = dateKey.split('-');
+    let displayDate = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateKey;
+
+    html += `
+      <div class="moment-date-group">
+        <div class="moment-date-header">
+          <h3>📅 Ngày ${displayDate}</h3>
+          <span class="moment-date-badge">${items.length} khoảnh khắc</span>
+        </div>
+        <div class="moment-grid">
+    `;
+
+    items.forEach(item => {
+      let mediaHtml = '';
+      if(item.type === 'video' && item.url){
+        mediaHtml = `<div class="moment-media-box"><video src="${item.url}" controls></video></div>`;
+      } else if(item.url){
+        mediaHtml = `<div class="moment-media-box"><img src="${item.url}" alt="Khoảnh khắc lớp 6C" onerror="this.parentElement.style.display='none'"></div>`;
+      }
+
+      html += `
+        <div class="moment-card">
+          ${mediaHtml}
+          <div class="moment-body">
+            <div class="moment-text">${escapeHtml(item.text)}</div>
+            <div class="moment-footer">
+              <span>Đăng lúc: ${displayDate}</span>
+              <button class="btn ghost" style="padding:4px 8px; font-size:11px; color:var(--danger);" onclick="deleteMoment(${item.id})">🗑️ Xóa</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div></div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function openAddMomentModal(){
+  let todayStr = new Date().toISOString().split('T')[0];
+  document.getElementById("content").innerHTML=`
+    <div class="eyebrow">THÊM KHOẢNH KHẮC MỚI</div>
+    <h2>Đăng bài & Kỷ niệm</h2>
+    <p class="muted">Chia sẻ hình ảnh, video hoặc bài viết để mọi người cùng chiêm ngưỡng.</p>
+    
+    <div style="margin-top:20px;" class="formgrid">
+      <div class="field full">
+        <label>Nội dung / Viết bài viết:</label>
+        <textarea id="momentText" placeholder="Nhập cảm nghĩ hoặc mô tả khoảng khắc đáng nhớ..."></textarea>
+      </div>
+      <div class="field">
+        <label>Ngày diễn ra (Phân chia ngày/tháng/năm):</label>
+        <input type="date" id="momentDate" value="${todayStr}">
+      </div>
+      <div class="field">
+        <label>Loại tệp đính kèm:</label>
+        <select id="momentType" onchange="toggleMediaInputType()">
+          <option value="img">Hình ảnh (URL hoặc Link ảnh)</option>
+          <option value="video">Video (URL hoặc Link video)</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label id="momentUrlLabel">Đường dẫn (URL) hình ảnh:</label>
+        <input type="text" id="momentUrl" placeholder="Dán link ảnh hoặc tên file (ví dụ: anh1.jpg)...">
+      </div>
+    </div>
+    
+    <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
+      <button class="btn ghost" onclick="closeModal()">Hủy</button>
+      <button class="btn" onclick="saveNewMoment()">Đăng khoảnh khắc</button>
+    </div>`;
+  document.getElementById("modal").classList.add("show");
+}
+
+function toggleMediaInputType(){
+  let type = document.getElementById("momentType").value;
+  let label = document.getElementById("momentUrlLabel");
+  let input = document.getElementById("momentUrl");
+  if(type === 'video'){
+    label.textContent = "Đường dẫn (URL) video:";
+    input.placeholder = "Dán link video (mp4)...";
+  } else {
+    label.textContent = "Đường dẫn (URL) hình ảnh:";
+    input.placeholder = "Dán link ảnh hoặc tên file...";
+  }
+}
+
+function saveNewMoment(){
+  let text = document.getElementById("momentText").value.trim();
+  let date = document.getElementById("momentDate").value;
+  let type = document.getElementById("momentType").value;
+  let url = document.getElementById("momentUrl").value.trim();
+
+  if(!date){
+    alert("Vui lòng chọn ngày tháng năm cho khoảnh khắc!");
+    return;
+  }
+  if(!text && !url){
+    alert("Vui lòng nhập nội dung hoặc đính kèm hình ảnh/video!");
+    return;
+  }
+
+  let newObj = {
+    id: Date.now(),
+    text: text || "Khoảnh khắc đáng nhớ của lớp 6C",
+    date: date,
+    type: type,
+    url: url
+  };
+
+  MOMENTS.push(newObj);
+  saveMoments();
+  closeModal();
+  renderMoments();
+}
+
+function deleteMoment(id){
+  if(confirm("Bạn có chắc chắn muốn xóa khoảnh khắc này không?")){
+    MOMENTS = MOMENTS.filter(m => m.id !== id);
+    saveMoments();
+    renderMoments();
+  }
+}
+
 function go(id){
   document.querySelectorAll(".page").forEach(x=>x.style.display="none");
   let el = document.getElementById(id);
@@ -337,7 +531,14 @@ function openStudent(stt){
 
 function closeModal(){document.getElementById("modal").classList.remove("show")}
 function theme(){document.body.classList.toggle("dark");localStorage.setItem("class6c_theme",document.body.classList.contains("dark")?"dark":"light")}
-function renderAll(){document.getElementById("boys").textContent=STUDENTS.filter(s=>s.gender==="Nam").length;document.getElementById("girls").textContent=STUDENTS.filter(s=>s.gender==="Nữ").length;render();initBlindBags();initDuckRace();}
+function renderAll(){
+  document.getElementById("boys").textContent=STUDENTS.filter(s=>s.gender==="Nam").length;
+  document.getElementById("girls").textContent=STUDENTS.filter(s=>s.gender==="Nữ").length;
+  render();
+  initBlindBags();
+  initDuckRace();
+  renderMoments();
+}
 
 // Sub-tab switcher inside Random Tab
 function switchRandomTab(tab){
@@ -498,7 +699,6 @@ function startDuckRace(){
   btn.disabled = true;
   btn.style.opacity = "0.6";
 
-  // Khởi tạo tốc độ ngẫu nhiên cho từng con vịt (từ 0.4% đến 1.5% mỗi frame)
   let duckSpeeds = activeDuckStudents.map(() => 0.4 + Math.random() * 1.1);
   let duckPositions = activeDuckStudents.map(() => 0);
   let raceFinished = false;
@@ -510,13 +710,12 @@ function startDuckRace(){
     let winnerIndex = -1;
 
     for(let i=0; i<activeDuckStudents.length; i++){
-      // Tạo chút ngẫu nhiên nhỏ liên tục trong lúc chạy để cuộc đua kịch tính
       duckSpeeds[i] += (Math.random() - 0.5) * 0.15;
       if(duckSpeeds[i] < 0.2) duckSpeeds[i] = 0.2;
       if(duckSpeeds[i] > 2.0) duckSpeeds[i] = 2.0;
 
       duckPositions[i] += duckSpeeds[i];
-      if(duckPositions[i] > 88) duckPositions[i] = 88; // Giới hạn về đích ở vạch cuối đường đua
+      if(duckPositions[i] > 88) duckPositions[i] = 88;
 
       let duckEl = document.getElementById(`duck_${i}`);
       if(duckEl){
@@ -556,12 +755,10 @@ function handleDuckWinner(winnerIdx){
   let overlay = document.getElementById("duckWinnerOverlay");
   overlay.classList.add("show");
 
-  // Xử lý tùy chọn xóa học sinh khỏi danh sách đua
   if(removeWinnerVal === 'yes'){
     activeDuckStudents.splice(winnerIdx, 1);
   }
 
-  // Xử lý tùy chọn tự động tắt sau 5 giây
   if(autoCloseVal === 'yes'){
     if(autoCloseDuckTimer) clearTimeout(autoCloseDuckTimer);
     autoCloseDuckTimer = setTimeout(() => {

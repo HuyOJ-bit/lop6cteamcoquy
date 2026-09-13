@@ -276,6 +276,30 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 </div>
 
 <footer>6C - CK35 · Cô giáo Trần Thị Kim Quy · 45 thành viên · Năm học 2026–2027 · </footer>
+<script type="module">
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyB79FgOj3k6nBHnPMaQyvuhG4sxVixb7sc",
+  authDomain: "lop6c-55f16.firebaseapp.com",
+  databaseURL: "https://lop6c-55f16-default-rtdb.firebaseio.com",
+  projectId: "lop6c-55f16",
+  storageBucket: "lop6c-55f16.firebasestorage.app",
+  messagingSenderId: "368086803049",
+  appId: "1:368086803049:web:ddcdd690e2a58d2803b8f8",
+  measurementId: "G-84RDXCY5E5"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+</script>
 <script>
 const STUDENTS=[
   {stt:1,name:"Bùi Bảo An",code:"2602230123",vemis:"-",moet:"-",regBook:"-",dob:"12/10/2015",entryDate:"18/08/2026",gender:"Nữ",nation:"Việt Nam",address:"Khối Kim Tân, Phường Thái Hòa, Nghệ An",hometown:"Khối Kim Tân, Phường Thái Hòa, Nghệ An",birthPlace:"Bệnh viện đa khoa khu vực Tây Bắc Nghệ An, Phường Tây Hiếu, Nghệ An",origin:"Xã Đô Lương, Nghệ An",birthReg:"Xã Thường Tín, TP. Hà Nội",cccd:"001315024614",cccdDate:"12/08/2024",cccdPlace:"Công an Thái Hoà",ethnic:"Kinh",religion:"Không",policy:"Không",nearPoor:"Không",unionMember:"Không",teamMember:"Không",fatherName:"Bùi Quang Tuấn",fatherJob:"Kỹ sư",fatherYear:"1981",motherName:"Phạm Thị Bích Nga",motherJob:"Kỹ sư",motherYear:"1983",phoneSll:"0986195387",emailSll:"-",phoneDad:"0909330929",phoneMom:"0986195387",phoneHs:"Không",disability:"Không",boarding:"-",note:"-"},
@@ -719,67 +743,54 @@ function startDuckRace(){
   btn.disabled = true;
   btn.style.opacity = "0.6";
 
-  let duckSpeeds = activeDuckStudents.map(() => 0.4 + Math.random() * 1.1);
+  let duckSpeeds = activeDuckStudents.map(() => 0.4 + Math.random() * 1.2);
   let duckPositions = activeDuckStudents.map(() => 0);
-  let raceFinished = false;
-
-  if(duckRaceInterval) clearInterval(duckRaceInterval);
+  let finished = false;
 
   duckRaceInterval = setInterval(() => {
     let maxPos = 0;
-    let winnerIndex = -1;
+    let winnerIdx = -1;
 
     for(let i=0; i<activeDuckStudents.length; i++){
-      duckSpeeds[i] += (Math.random() - 0.5) * 0.15;
-      if(duckSpeeds[i] < 0.2) duckSpeeds[i] = 0.2;
-      if(duckSpeeds[i] > 2.0) duckSpeeds[i] = 2.0;
+      duckPositions[i] += duckSpeeds[i] + (Math.random() * 0.8 - 0.3);
+      if(duckPositions[i] > 92) duckPositions[i] = 92;
 
-      duckPositions[i] += duckSpeeds[i];
-      if(duckPositions[i] > 88) duckPositions[i] = 88;
-
-      let duckEl = document.getElementById(`duck_${i}`);
-      if(duckEl){
-        duckEl.style.left = duckPositions[i] + '%';
+      let iconEl = document.getElementById(`duck_${i}`);
+      if(iconEl){
+        iconEl.style.left = duckPositions[i] + '%';
       }
 
       if(duckPositions[i] > maxPos){
         maxPos = duckPositions[i];
-      }
-
-      if(duckPositions[i] >= 88 && !raceFinished){
-        raceFinished = true;
-        winnerIndex = i;
+        winnerIdx = i;
       }
     }
 
-    if(raceFinished){
+    if(maxPos >= 92 && !finished){
+      finished = true;
       clearInterval(duckRaceInterval);
-      handleDuckWinner(winnerIndex);
-      btn.disabled = false;
-      btn.style.opacity = "1";
+      
+      let winnerStudent = activeDuckStudents[winnerIdx];
+      showDuckWinner(winnerStudent, winnerIdx);
     }
-  }, 40);
+  }, 50);
 }
 
-function handleDuckWinner(winnerIdx){
-  let winner = activeDuckStudents[winnerIdx];
-  let autoCloseVal = document.getElementById("duckAutoClose").value;
-  let removeWinnerVal = document.getElementById("duckRemoveWinner").value;
-
+function showDuckWinner(student, index){
   let contentHtml = `
-    <h3 style="font-size:24px; margin:0; color:var(--text);">${winner.name}</h3>
-    <p class="muted" style="margin:6px 0 0 0;">Mã HS: ${winner.code} · Giới tính: ${winner.gender}</p>
+    <h3 style="font-size:24px; margin:0 0 8px 0; color:var(--text);">${student.name}</h3>
+    <p class="muted" style="margin:0;">Vịt số #${index+1} · Giới tính: ${student.gender} · Sinh: ${student.dob}</p>
   `;
   document.getElementById("duckWinnerContent").innerHTML = contentHtml;
   document.getElementById("duckWinnerOverlay").classList.add("show");
 
-  if(removeWinnerVal === 'yes'){
-    activeDuckStudents.splice(winnerIdx, 1);
-    renderDuckTrack();
+  let removeWinnerOption = document.getElementById("duckRemoveWinner").value;
+  if(removeWinnerOption === 'yes'){
+    activeDuckStudents.splice(index, 1);
   }
 
-  if(autoCloseVal === 'yes'){
-    if(autoCloseDuckTimer) clearTimeout(autoCloseDuckTimer);
+  let autoCloseOption = document.getElementById("duckAutoClose").value;
+  if(autoCloseOption === 'yes'){
     autoCloseDuckTimer = setTimeout(() => {
       closeDuckWinnerModal();
     }, 5000);
@@ -787,19 +798,33 @@ function handleDuckWinner(winnerIdx){
 }
 
 function closeDuckWinnerModal(){
-  if(autoCloseDuckTimer) clearTimeout(autoCloseDuckTimer);
+  if(autoCloseDuckTimer){
+    clearTimeout(autoCloseDuckTimer);
+    autoCloseDuckTimer = null;
+  }
   document.getElementById("duckWinnerOverlay").classList.remove("show");
+  
+  let btn = document.getElementById("startDuckBtn");
+  btn.disabled = false;
+  btn.style.opacity = "1";
+
+  renderDuckTrack();
 }
 
 function resetDuckRace(){
+  if(duckRaceInterval) clearInterval(duckRaceInterval);
+  if(autoCloseDuckTimer) clearTimer(autoCloseDuckTimer);
+  document.getElementById("duckWinnerOverlay").classList.remove("show");
+
+  let btn = document.getElementById("startDuckBtn");
+  btn.disabled = false;
+  btn.style.opacity = "1";
+
   initDuckRace();
 }
 
-window.onload = function(){
-  let savedTheme = localStorage.getItem("class6c_theme");
-  if(savedTheme === "dark"){
-    document.body.classList.add("dark");
-  }
+window.onload=function(){
+  if(localStorage.getItem("class6c_theme")==="dark") document.body.classList.add("dark");
   renderAll();
 };
 </script>

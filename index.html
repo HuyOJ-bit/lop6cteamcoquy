@@ -152,16 +152,16 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
   </div>
 
   <div class="sub-tabs">
-    <button class="sub-tab-btn active" id="btnTabBags" onclick="switchRandomTab('bags')">🎁 Xé Túi Mù (45 Học Sinh)</button>
+    <button class="sub-tab-btn active" id="btnTabBags" onclick="switchRandomTab('bags')">🎁 Xé Túi Mù/button>
     <button class="sub-tab-btn" id="btnTabSpin" onclick="switchRandomTab('spin')">🎲 Quay Ngẫu Nhiên</button>
-    <button class="sub-tab-btn" id="btnTabDuck" onclick="switchRandomTab('duck')">🦆 Đua Vịt Học Sinh</button>
+    <button class="sub-tab-btn" id="btnTabDuck" onclick="switchRandomTab('duck')">🦆 Đua Vịt</button>
   </div>
 
   <!-- Sub Tab 1: Xé túi mù -->
   <div id="subContentBags" class="random-box">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-      <p class="muted" style="margin:0">Bấm vào từng túi mù để xé và xem tên học sinh bên trong (Xếp lộn xộn ngẫu nhiên).</p>
-      <button class="btn alt" onclick="resetBlindBags()">🔄 Đặt lại túi mù</button>
+      <p class="muted" style="margin:0">Bấm vào từng túi mù để xé và xem tên học sinh bên trong.</p>
+      <button class="btn alt" onclick="resetBlindBags()">🔄 Đặt lại</button>
     </div>
     <div id="bagsGrid" class="bags-grid"></div>
   </div>
@@ -176,7 +176,7 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
       <div class="field">
         <label>Lọc theo giới tính:</label>
         <select id="randGender" style="width:100%">
-          <option value="">Tất cả (Nam & Nữ)</option>
+          <option value="">Tất cả </option>
           <option value="Nam">Chỉ Nam</option>
           <option value="Nữ">Chỉ Nữ</option>
         </select>

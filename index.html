@@ -8,6 +8,7 @@
 :root{--bg:#f8fafc;--card:#ffffff;--text:#334155;--muted:#64748b;--line:#e2e8f0;--brand:#0d9488;--brand2:#0ea5e9;--good:#10b981;--danger:#ef4444;--shadow:0 10px 30px -5px rgba(13, 148, 136, 0.05), 0 8px 10px -6px rgba(13, 148, 136, 0.02);--transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,sans-serif;transition:background 0.4s ease,color 0.4s ease;position:relative;min-height:100vh}
+/* Thêm hình nền làm mờ nhẹ nhàng */
 body::before{content:"";position:fixed;top:-10px;left:-10px;right:-10px;bottom:-10px;background:url('1000018411.jpg') center/cover no-repeat;filter:blur(6px);z-index:-2}
 body::after{content:"";position:fixed;inset:0;background:rgba(248, 250, 252, 0.7);z-index:-1;transition:background 0.4s ease}
 .dark body::after{background:rgba(15, 23, 42, 0.8)}
@@ -80,45 +81,27 @@ textarea { resize: vertical; min-height: 100px; }
 .dark .random-display { background: rgba(13,148,136,0.1); }
 
 /* Sub-tabs inside Random tab */
-.sub-tabs { display: flex; gap: 10px; margin-bottom: 24px; justify-content: center; flex-wrap: wrap; }
+.sub-tabs { display: flex; gap: 10px; margin-bottom: 24px; justify-content: center; }
 .sub-tab-btn { padding: 10px 20px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-weight: 700; cursor: pointer; transition: var(--transition); }
 .sub-tab-btn.active { background: var(--brand); color: #fff; border-color: var(--brand); }
 
-/* Blind Bags Grid */
-.bags-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; max-height: 450px; overflow-y: auto; padding: 10px; background: var(--bg); border-radius: 16px; border: 1px solid var(--line); }
-.blind-bag { aspect-ratio: 1; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: white; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: var(--transition); box-shadow: 0 4px 12px rgba(13,148,136,0.2); user-select: none; }
-.blind-bag:hover { transform: translateY(-4px) scale(1.05); filter: brightness(1.1); }
-.blind-bag.opened { background: var(--line); color: var(--muted); opacity: 0.6; box-shadow: none; }
-.dark .blind-bag.opened { background: #334155; color: #94a3b8; }
-.bag-number { font-size: 16px; }
-.bag-label { font-size: 10px; opacity: 0.8; font-weight: 500; }
+/* Blind Bags Grid (Đã làm khung to rõ) */
+.bags-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 16px; max-height: 520px; overflow-y: auto; padding: 16px; background: var(--bg); border-radius: 16px; border: 1px solid var(--line); }
+.blind-bag { aspect-ratio: 1.1; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: white; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; transition: var(--transition); box-shadow: 0 6px 16px rgba(13,148,136,0.25); user-select: none; padding: 10px; text-align: center; }
+.blind-bag:hover { transform: translateY(-6px) scale(1.06); filter: brightness(1.1); box-shadow: 0 12px 24px rgba(13,148,136,0.35); }
+.blind-bag.opened { background: var(--line); color: var(--muted); opacity: 0.7; box-shadow: none; border: 2px dashed var(--muted); }
+.dark .blind-bag.opened { background: #334155; color: #94a3b8; border-color: #475569; }
+.bag-number { font-size: 20px; margin-bottom: 4px; }
+.bag-label { font-size: 11px; opacity: 0.9; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* Duck Race Custom Styles */
-.duck-track-container { background: var(--bg); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-bottom: 20px; max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; position: relative; }
-.duck-lane { display: flex; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 6px 12px; position: relative; min-height: 48px; }
-.duck-lane-info { width: 140px; font-size: 12px; font-weight: 700; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; z-index: 2; flex-shrink: 0; }
-.duck-runway { flex: 1; position: relative; height: 36px; margin-left: 10px; border-right: 3px dashed var(--brand); }
-.duck-icon { position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: 24px; transition: left 0.1s linear; z-index: 3; cursor: default; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
-
-/* Winner Notification Overlay Popup */
-#duckWinnerOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
-#duckWinnerOverlay.show { display: flex; opacity: 1; }
-.duck-winner-card { background: var(--card); border: 2px solid var(--brand); border-radius: 28px; padding: 40px; text-align: center; max-width: 480px; width: 90%; box-shadow: 0 25px 60px -15px rgba(13, 148, 136, 0.3); transform: scale(0.8); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-#duckWinnerOverlay.show .duck-winner-card { transform: scale(1); }
-
-/* Moment / Khoanh Khac Styles */
-.moment-date-group { margin-bottom: 32px; }
-.moment-date-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--line); }
-.moment-date-header h3 { margin: 0; font-size: 18px; color: var(--brand); }
-.moment-date-badge { background: rgba(13,148,136,0.1); color: var(--brand); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
-.moment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-.moment-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); display: flex; flex-direction: column; }
-.moment-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -15px rgba(13,148,136,0.1); border-color: var(--brand); }
-.moment-media-box { width: 100%; max-height: 260px; overflow: hidden; background: #000; display: flex; align-items: center; justify-content: center; position: relative; }
-.moment-media-box img, .moment-media-box video { width: 100%; height: 100%; object-fit: cover; max-height: 260px; }
-.moment-body { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-.moment-text { font-size: 14px; line-height: 1.6; color: var(--text); margin-bottom: 12px; white-space: pre-wrap; word-break: break-word; }
-.moment-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; margin-top: auto; }
+/* Đua vịt to rõ (Duck Racing Game) */
+.duck-track-container { background: var(--bg); border: 1px solid var(--line); border-radius: 20px; padding: 20px; margin-bottom: 24px; position: relative; overflow: hidden; }
+.duck-lane { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px dashed var(--line); padding: 14px 0; position: relative; min-height: 75px; }
+.duck-lane:last-child { border-bottom: none; }
+.duck-info { width: 130px; font-weight: 700; font-size: 14px; z-index: 2; background: var(--card); padding: 6px 10px; border-radius: 10px; border: 1px solid var(--line); text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+.duck-runner { position: absolute; left: 140px; font-size: 38px; transition: left 0.1s linear; z-index: 3; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); }
+.finish-line { position: absolute; right: 40px; top: 0; bottom: 0; width: 4px; background: var(--danger); z-index: 1; display: flex; align-items: center; justify-content: center; }
+.finish-line::after { content: "🏁"; position: absolute; top: -2px; font-size: 22px; }
 
 footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;color:var(--muted);font-size:14px;margin-top:40px}
 .dark{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--muted:#94a3b8;--line:#334155;--shadow:0 10px 30px -5px rgba(0, 0, 0, 0.5)}
@@ -141,8 +124,7 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 <div class="navlinks">
   <button onclick="go('home')">🏠Trang chủ</button>
   <button onclick="go('students')">🧑‍🎓👩‍🎓Thành viên</button>
-  <button onclick="go('moments')">📸 Khoảnh khắc</button>
-  <button onclick="go('randomizer')">🎲 Quay random</button>
+  <button onclick="go('randomizer')">🎲 Khám phá & Trò chơi</button>
   <button class="tool" onclick="theme()" title="Chuyển đổi giao diện sáng/tối">◐</button>
   <button class="tool" onclick="print()" title="In trang">⎙</button>
 </div>
@@ -154,137 +136,68 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 <div class="card heroSide"><div class="eyebrow">GIÁO VIÊN</div><h2>Trần Thị Kim Quy</h2><p class="muted">Lớp 6C - CK35 · Năm học 2026–2027</p><button class="btn" style="margin-top:16px" onclick="go('students')">Xem 45 thành viên →</button></div></div>
 <div class="dashgrid section"><div class="card dash"><h2>Giới thiệu lớp học</h2><p class="muted">Cung cấp thông tin tổng quan, hoạt động và danh sách thành viên của lớp một cách trực quan.</p></div><div class="card dash"><h2>Hồ sơ thông tin</h2><p class="muted">Lưu trữ đầy đủ thông tin định danh và dễ dàng tra cứu trực tiếp khi cần thiết.</p></div></div>
 </section>
-
 <section id="students" class="page" style="display:none"><div class="head"><div><h2>Danh sách 45 thành viên</h2><p class="muted">Bấm vào học sinh để xem chi tiết lý lịch thông tin.</p></div></div>
 <div class="toolbar"><input id="search" class="search" placeholder="Tìm theo tên hoặc mã học sinh..." oninput="render()"><select id="gender" onchange="render()"><option value="">Tất cả giới tính</option><option>Nam</option><option>Nữ</option></select></div><div id="grid" class="grid"></div></section>
 
-<section id="moments" class="page" style="display:none">
-  <div class="head">
-    <div>
-      <h2>📸 Khoảnh Khắc Đáng Nhớ</h2>
-      <p class="muted">Chia sẻ bài viết, hình ảnh và video ghi lại những kỷ niệm đẹp của lớp, tự động phân chia theo ngày tháng năm.</p>
-    </div>
-    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-      <button class="btn" onclick="openAddMomentModal('post')">📝 Thêm bài viết</button>
-      <button class="btn" onclick="openAddMomentModal('img')">🖼️ Thêm ảnh</button>
-      <button class="btn" onclick="openAddMomentModal('video')">🎬 Thêm video</button>
-    </div>
-  </div>
-  <div id="momentsContainer"></div>
-</section>
-
+<!-- Tab Khám Phá & Trò Chơi (Đã phóng to túi mù và đổi sang Đua vịt to rõ) -->
 <section id="randomizer" class="page" style="display:none">
   <div class="head">
     <div>
-      <h2>🎲 Khu Vực Hoạt Động & Trò Chơi Ngẫu Nhiên</h2>
-      <p class="muted">Lựa chọn học sinh ngẫu nhiên, xé túi mù hoặc tham gia cuộc đua vịt thú vị.</p>
+      <h2>🎲 Khu Vực Khám Phá & Trò Chơi</h2>
+      <p class="muted">Trải nghiệm xé túi mù phóng to trực quan và cuộc đua vịt gay cấn giữa các học sinh.</p>
     </div>
   </div>
 
   <div class="sub-tabs">
     <button class="sub-tab-btn active" id="btnTabBags" onclick="switchRandomTab('bags')">🎁 Xé Túi Mù (45 Học Sinh)</button>
-    <button class="sub-tab-btn" id="btnTabSpin" onclick="switchRandomTab('spin')">🎲 Quay Ngẫu Nhiên</button>
-    <button class="sub-tab-btn" id="btnTabDuck" onclick="switchRandomTab('duck')">🦆 Đua Vịt Học Sinh</button>
+    <button class="sub-tab-btn" id="btnTabDuck" onclick="switchRandomTab('duck')">🦆 Đua Vịt May Mắn</button>
   </div>
 
+  <!-- Sub Tab 1: Xé túi mù phóng to -->
   <div id="subContentBags" class="random-box">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
-      <p class="muted" style="margin:0">Bấm vào từng túi mù để xé và xem tên học sinh bên trong (Xếp lộn xộn ngẫu nhiên).</p>
+      <p class="muted" style="margin:0">Khung túi mù được thiết kế to rõ, bấm vào từng túi để khám phá tên học sinh bên trong!</p>
       <button class="btn alt" onclick="resetBlindBags()">🔄 Đặt lại túi mù</button>
     </div>
     <div id="bagsGrid" class="bags-grid"></div>
   </div>
 
-  <div id="subContentSpin" class="random-box" style="display:none;">
-    <div class="settings-box">
-      <div class="field">
-        <label>Số lượng học sinh gọi:</label>
-        <input type="number" id="randCount" min="1" max="10" value="1" style="width:100%">
-      </div>
-      <div class="field">
-        <label>Lọc theo giới tính:</label>
-        <select id="randGender" style="width:100%">
-          <option value="">Tất cả (Nam & Nữ)</option>
-          <option value="Nam">Chỉ Nam</option>
-          <option value="Nữ">Chỉ Nữ</option>
-        </select>
-      </div>
-    </div>
-    <div id="randDisplay" class="random-display">Nhấn "Bắt đầu quay" để chọn học sinh!</div>
-    <div class="random-controls">
-      <button class="btn" onclick="startRandom()">🎲 Bắt đầu quay</button>
-      <button class="btn alt" onclick="resetRandom()">🔄 Đặt lại</button>
-    </div>
-  </div>
-
+  <!-- Sub Tab 2: Đua vịt to rõ -->
   <div id="subContentDuck" class="random-box" style="display:none;">
-    <div class="settings-box">
-      <div class="field">
-        <label>⚙️ Tự tắt thông báo sau 5 giây:</label>
-        <select id="duckAutoClose" style="width:100%">
-          <option value="yes">Bật (Tự động tắt sau 5s)</option>
-          <option value="no">Tắt (Giữ nguyên thông báo)</option>
-        </select>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+      <p class="muted" style="margin:0">Chọn ngẫu nhiên 4 chú vịt đại diện cho 4 học sinh tranh tài về đích!</p>
+      <button class="btn" onclick="startDuckRace()">🏁 Bắt đầu cuộc đua vịt!</button>
+    </div>
+    
+    <div class="duck-track-container" id="duckTrack">
+      <div class="duck-lane">
+        <div class="duck-info" id="duckName0">Vịt 1</div>
+        <div class="duck-runner" id="duckRunner0" style="left: 140px;">🦆</div>
+        <div class="finish-line"></div>
       </div>
-      <div class="field">
-        <label>🗑️ Xóa học sinh thắng khỏi danh sách đua:</label>
-        <select id="duckRemoveWinner" style="width:100%">
-          <option value="no">Không xóa (Giữ nguyên số lượng)</option>
-          <option value="yes">Xóa học sinh đã thắng</option>
-        </select>
+      <div class="duck-lane">
+        <div class="duck-info" id="duckName1">Vịt 2</div>
+        <div class="duck-runner" id="duckRunner1" style="left: 140px;">🦆</div>
+        <div class="finish-line"></div>
+      </div>
+      <div class="duck-lane">
+        <div class="duck-info" id="duckName2">Vịt 3</div>
+        <div class="duck-runner" id="duckRunner2" style="left: 140px;">🦆</div>
+        <div class="finish-line"></div>
+      </div>
+      <div class="duck-lane">
+        <div class="duck-info" id="duckName3">Vịt 4</div>
+        <div class="duck-runner" id="duckRunner3" style="left: 140px;">🦆</div>
+        <div class="finish-line"></div>
       </div>
     </div>
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-      <span class="muted" id="duckStatusInfo">Sẵn sàng xuất phát: 45 con vịt</span>
-      <div style="display:flex; gap:8px;">
-        <button class="btn alt" onclick="resetDuckRace()">🔄 Đặt lại vịt</button>
-      </div>
-    </div>
-
-    <div id="duckTrack" class="duck-track-container"></div>
-
-    <div class="random-controls" style="margin-top: 16px;">
-      <button class="btn" id="startDuckBtn" onclick="startDuckRace()">🏁 Cho vịt xuất phát!</button>
-    </div>
+    <div id="duckResultDisplay" class="random-display" style="margin-top:16px; min-height:70px; font-size:22px;">Nhấn "Bắt đầu cuộc đua vịt!" để xem ai vô địch!</div>
   </div>
 </section>
 </main>
-
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="content"></div></div></div>
-
-<div id="duckWinnerOverlay" onclick="closeDuckWinnerModal()">
-  <div class="duck-winner-card" onclick="event.stopPropagation()">
-    <div class="eyebrow">🏆 KẾT QUẢ ĐUA VỊT</div>
-    <h2 style="color:var(--brand); font-size:28px; margin:10px 0;">🎉 Vịt Về Đích Đầu Tiên!</h2>
-    <div id="duckWinnerContent" style="background:rgba(13,148,136,0.08); padding:20px; border-radius:16px; margin:20px 0; border:2px dashed var(--brand);"></div>
-    <div style="display:flex; gap:10px; justify-content:center;">
-      <button class="btn" onclick="closeDuckWinnerModal()">Xác nhận</button>
-    </div>
-  </div>
-</div>
-
 <footer>6C - CK35 · Cô giáo Trần Thị Kim Quy · 45 thành viên · Năm học 2026–2027 · </footer>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyB79FgOj3k6nBHnPMaQyvuhG4sxVixb7sc",
-  authDomain: "lop6c-55f16.firebaseapp.com",
-  databaseURL: "https://lop6c-55f16-default-rtdb.firebaseio.com",
-  projectId: "lop6c-55f16",
-  storageBucket: "lop6c-55f16.firebasestorage.app",
-  messagingSenderId: "368086803049",
-  appId: "1:368086803049:web:ddcdd690e2a58d2803b8f8",
-  measurementId: "G-84RDXCY5E5"
-};
-
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-</script>
-
 <script>
 const STUDENTS=[
   {stt:1,name:"Bùi Bảo An",code:"2602230123",vemis:"-",moet:"-",regBook:"-",dob:"12/10/2015",entryDate:"18/08/2026",gender:"Nữ",nation:"Việt Nam",address:"Khối Kim Tân, Phường Thái Hòa, Nghệ An",hometown:"Khối Kim Tân, Phường Thái Hòa, Nghệ An",birthPlace:"Bệnh viện đa khoa khu vực Tây Bắc Nghệ An, Phường Tây Hiếu, Nghệ An",origin:"Xã Đô Lương, Nghệ An",birthReg:"Xã Thường Tín, TP. Hà Nội",cccd:"001315024614",cccdDate:"12/08/2024",cccdPlace:"Công an Thái Hoà",ethnic:"Kinh",religion:"Không",policy:"Không",nearPoor:"Không",unionMember:"Không",teamMember:"Không",fatherName:"Bùi Quang Tuấn",fatherJob:"Kỹ sư",fatherYear:"1981",motherName:"Phạm Thị Bích Nga",motherJob:"Kỹ sư",motherYear:"1983",phoneSll:"0986195387",emailSll:"-",phoneDad:"0909330929",phoneMom:"0986195387",phoneHs:"Không",disability:"Không",boarding:"-",note:"-"},
@@ -334,181 +247,6 @@ const STUDENTS=[
   {stt:45,name:"Nguyễn Diệp Vy",code:"2602230523",vemis:"-",moet:"-",regBook:"-",dob:"01/10/2015",entryDate:"18/08/2026",gender:"Nữ",nation:"Việt Nam",address:"Khối Long Sơn 2, Phường Thái Hòa, Nghệ An",hometown:"Khối Long Sơn 2, Phường Thái Hòa, Nghệ An",birthPlace:"Bệnh viện đa khoa khu vực Tây Bắc Nghệ An, Phường Tây Hiếu, Nghệ An",origin:"Xã Tân Châu, Nghệ An",birthReg:"Phường Thái Hòa, Nghệ An",cccd:"040315006968",cccdDate:"16/07/2024",cccdPlace:"Bộ Công an",ethnic:"Kinh",religion:"Không",policy:"Không",nearPoor:"Không",unionMember:"Không",teamMember:"Không",fatherName:"Nguyễn Thanh Tuấn",fatherJob:"Bảo vệ",fatherYear:"1983",motherName:"Thái Thị Dung",motherJob:"Công nhân",motherYear:"1982",phoneSll:"0386740507",emailSll:"0986722981",phoneDad:"0386740507",phoneMom:"Không",phoneHs:"Không",disability:"Không",boarding:"-",note:"-"}
 ];
 
-let MOMENTS = JSON.parse(localStorage.getItem('class6c_moments')) || [
-  {id: 1, text: "Khai giảng năm học mới đầy hào hứng của lớp 6C!", date: "2026-09-02", type: "img", url: "1000018411.jpg"}
-];
-
-function saveMoments(){
-  localStorage.setItem('class6c_moments', JSON.stringify(MOMENTS));
-}
-
-function renderMoments(){
-  let container = document.getElementById('momentsContainer');
-  if(!container) return;
-
-  if(MOMENTS.length === 0){
-    container.innerHTML = `<div class="card" style="padding:40px; text-align:center;"><p class="muted">Chưa có khoảnh khắc nào được đăng tải. Hãy bấm các nút thêm phía trên để bắt đầu!</p></div>`;
-    return;
-  }
-
-  let sorted = [...MOMENTS].sort((a,b) => new Date(b.date) - new Date(a.date));
-  let groups = {};
-  sorted.forEach(m => {
-    let dKey = m.date;
-    if(!groups[dKey]) groups[dKey] = [];
-    groups[dKey].push(m);
-  });
-
-  let html = '';
-  for(let dateKey in groups){
-    let items = groups[dateKey];
-    let parts = dateKey.split('-');
-    let displayDate = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateKey;
-
-    html += `
-      <div class="moment-date-group">
-        <div class="moment-date-header">
-          <h3>📅 Ngày ${displayDate}</h3>
-          <span class="moment-date-badge">${items.length} khoảnh khắc</span>
-        </div>
-        <div class="moment-grid">
-    `;
-
-    items.forEach(item => {
-      let mediaHtml = '';
-      if(item.type === 'video' && item.url){
-        mediaHtml = `<div class="moment-media-box"><video src="${item.url}" controls></video></div>`;
-      } else if(item.type === 'img' && item.url){
-        mediaHtml = `<div class="moment-media-box"><img src="${item.url}" alt="Khoảnh khắc lớp 6C" onerror="this.parentElement.style.display='none'"></div>`;
-      }
-
-      html += `
-        <div class="moment-card">
-          ${mediaHtml}
-          <div class="moment-body">
-            <div class="moment-text">${escapeHtml(item.text)}</div>
-            <div class="moment-footer">
-              <span>Đăng lúc: ${displayDate}</span>
-              <button class="btn ghost" style="padding:4px 8px; font-size:11px; color:var(--danger);" onclick="deleteMoment(${item.id})">🗑️ Xóa</button>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-
-    html += `</div></div>`;
-  }
-
-  container.innerHTML = html;
-}
-
-function escapeHtml(text) {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-}
-
-function openAddMomentModal(mode){
-  let todayStr = new Date().toISOString().split('T')[0];
-  let titleText = "THÊM BÀI VIẾT";
-  let descText = "Chia sẻ dòng cảm nghĩ, thông báo hoặc câu chuyện của lớp.";
-  let showFileField = false;
-  let acceptType = "";
-  let modeLabel = "";
-
-  if(mode === 'img'){
-    titleText = "THÊM ẢNH KỶ NIỆM";
-    descText = "Tải lên hình ảnh từ tệp thiết bị của bạn.";
-    showFileField = true;
-    acceptType = "image/*";
-    modeLabel = "Chọn tệp hình ảnh:";
-  } else if(mode === 'video'){
-    titleText = "THÊM VIDEO KỶ NIỆM";
-    descText = "Tải lên video từ tệp thiết bị của bạn.";
-    showFileField = true;
-    acceptType = "video/*";
-    modeLabel = "Chọn tệp video:";
-  }
-
-  document.getElementById("content").innerHTML=`
-    <div class="eyebrow">${titleText}</div>
-    <h2>Đăng kỷ niệm mới</h2>
-    <p class="muted">${descText}</p>
-    
-    <div style="margin-top:20px;" class="formgrid">
-      <div class="field full">
-        <label>Nội dung mô tả / Viết bài viết:</label>
-        <textarea id="momentText" placeholder="Nhập nội dung chia sẻ..."></textarea>
-      </div>
-      <div class="field full">
-        <label>Ngày diễn ra (Phân chia ngày/tháng/năm):</label>
-        <input type="date" id="momentDate" value="${todayStr}" style="width:100%">
-      </div>
-      ${showFileField ? `
-      <div class="field full">
-        <label>${modeLabel}</label>
-        <input type="file" id="momentFile" accept="${acceptType}" style="width:100%">
-      </div>` : ''}
-    </div>
-    
-    <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
-      <button class="btn ghost" onclick="closeModal()">Hủy</button>
-      <button class="btn" onclick="saveNewMoment('${mode}')">Đăng khoảnh khắc</button>
-    </div>`;
-  document.getElementById("modal").classList.add("show");
-}
-
-function saveNewMoment(mode){
-  let text = document.getElementById("momentText").value.trim();
-  let date = document.getElementById("momentDate").value;
-
-  if(!date){
-    alert("Vui lòng chọn ngày tháng năm cho khoảnh khắc!");
-    return;
-  }
-
-  if(mode === 'post'){
-    if(!text){
-      alert("Vui lòng nhập nội dung bài viết!");
-      return;
-    }
-    finishSaveMoment(text, date, 'post', '');
-  } else {
-    let fileInput = document.getElementById("momentFile");
-    if(fileInput && fileInput.files && fileInput.files[0]){
-      let file = fileInput.files[0];
-      let reader = new FileReader();
-      reader.onload = function(e){
-        finishSaveMoment(text || (mode === 'img' ? "Hình ảnh kỷ niệm" : "Video kỷ niệm"), date, mode, e.target.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert("Vui lòng chọn tệp tải lên từ thiết bị!");
-    }
-  }
-}
-
-function finishSaveMoment(text, date, type, url){
-  let newObj = {
-    id: Date.now(),
-    text: text,
-    date: date,
-    type: type,
-    url: url
-  };
-
-  MOMENTS.push(newObj);
-  saveMoments();
-  closeModal();
-  renderMoments();
-}
-
-function deleteMoment(id){
-  if(confirm("Bạn có chắc chắn muốn xóa khoảnh khắc này không?")){
-    MOMENTS = MOMENTS.filter(m => m.id !== id);
-    saveMoments();
-    renderMoments();
-  }
-}
-
 function go(id){
   document.querySelectorAll(".page").forEach(x=>x.style.display="none");
   let el = document.getElementById(id);
@@ -519,14 +257,8 @@ function go(id){
   scrollTo({top:0,behavior:"smooth"});
   renderAll();
 }
-
 function initials(n){return n.split(" ").slice(-2).map(x=>x[0]).join("").slice(0,2).toUpperCase()}
-
-function render(){
-  let q=(document.getElementById("search")?.value||"").toLowerCase(),g=document.getElementById("gender")?.value||"";
-  let list=STUDENTS.filter(s=>(!q||s.name.toLowerCase().includes(q)||s.code.includes(q))&&(!g||s.gender===g));
-  document.getElementById("grid").innerHTML=list.map(s=>`<article class="student" onclick="openStudent(${s.stt})"><div class="studentTop"><div class="avatar">${initials(s.name)}</div><div><h3>${s.name}</h3><div class="studentMeta">${s.gender} · Sinh ${s.dob}</div></div></div><div class="tags"><span class="tag">STT ${s.stt}</span><span class="tag">Mã HS ${s.code}</span></div></article>`).join("")
-}
+function render(){let q=(document.getElementById("search")?.value||"").toLowerCase(),g=document.getElementById("gender")?.value||"";let list=STUDENTS.filter(s=>(!q||s.name.toLowerCase().includes(q)||s.code.includes(q))&&(!g||s.gender===g));document.getElementById("grid").innerHTML=list.map(s=>`<article class="student" onclick="openStudent(${s.stt})"><div class="studentTop"><div class="avatar">${initials(s.name)}</div><div><h3>${s.name}</h3><div class="studentMeta">${s.gender} · Sinh ${s.dob}</div></div></div><div class="tags"><span class="tag">STT ${s.stt}</span><span class="tag">Mã HS ${s.code}</span></div></article>`).join("")}
 
 function openStudent(stt){
   let s=STUDENTS.find(x=>x.stt===stt);
@@ -556,46 +288,30 @@ function openStudent(stt){
         <div class="info-item"><span>Ghi chú</span><b>${s.note}</b></div>
       </div>
       <div style="display:flex;gap:10px;margin-top:16px"><button class="btn ghost" onclick="closeModal()">Đóng</button></div>
-    `;
+    </div>`;
   document.getElementById("modal").classList.add("show");
 }
 
 function closeModal(){document.getElementById("modal").classList.remove("show")}
+function theme(){document.body.classList.toggle("dark");localStorage.setItem("class6c_theme",document.body.classList.contains("dark")?"dark":"light")}
+function renderAll(){document.getElementById("boys").textContent=STUDENTS.filter(s=>s.gender==="Nam").length;document.getElementById("girls").textContent=STUDENTS.filter(s=>s.gender==="Nữ").length;render();initBlindBags();}
 
-function theme(){
-  document.body.classList.toggle("dark");
-  localStorage.setItem("class6c_theme",document.body.classList.contains("dark")?"dark":"light");
-}
-
-function renderAll(){
-  document.getElementById("boys").textContent=STUDENTS.filter(s=>s.gender==="Nam").length;
-  document.getElementById("girls").textContent=STUDENTS.filter(s=>s.gender==="Nữ").length;
-  render();
-  initBlindBags();
-  initDuckRace();
-  renderMoments();
-}
-
+// Sub-tab switcher inside Random Tab
 function switchRandomTab(tab){
-  document.getElementById('btnTabBags').classList.remove('active');
-  document.getElementById('btnTabSpin').classList.remove('active');
-  document.getElementById('btnTabDuck').classList.remove('active');
-  document.getElementById('subContentBags').style.display = 'none';
-  document.getElementById('subContentSpin').style.display = 'none';
-  document.getElementById('subContentDuck').style.display = 'none';
-
   if(tab==='bags'){
     document.getElementById('btnTabBags').classList.add('active');
+    document.getElementById('btnTabDuck').classList.remove('active');
     document.getElementById('subContentBags').style.display = 'block';
-  } else if(tab==='spin'){
-    document.getElementById('btnTabSpin').classList.add('active');
-    document.getElementById('subContentSpin').style.display = 'block';
-  } else if(tab==='duck'){
+    document.getElementById('subContentDuck').style.display = 'none';
+  } else {
     document.getElementById('btnTabDuck').classList.add('active');
+    document.getElementById('btnTabBags').classList.remove('active');
     document.getElementById('subContentDuck').style.display = 'block';
+    document.getElementById('subContentBags').style.display = 'none';
   }
 }
 
+// Blind Bags (Xé túi mù phóng to) Logic
 let shuffledBagStudents = [];
 let openedBagsState = {};
 
@@ -613,13 +329,13 @@ function renderBlindBags(){
     let student = shuffledBagStudents[i];
     if(isOpened){
       html += `<div class="blind-bag opened" onclick="toggleBag(${i})">
-                <span class="bag-number" style="font-size:11px; text-align:center; padding:4px;">${student.name}</span>
-                <span class="bag-label">Đã xé</span>
+                <span class="bag-number" style="font-size:12px; text-align:center; padding:2px;">${student.name}</span>
+                <span class="bag-label" style="font-size:9px;">Đã xé</span>
                </div>`;
     } else {
       html += `<div class="blind-bag" onclick="toggleBag(${i})">
                 <span class="bag-number">🎁 #${i+1}</span>
-                <span class="bag-label">Túi mù</span>
+                <span class="bag-label">Túi Mù</span>
                </div>`;
     }
   }
@@ -652,156 +368,46 @@ function resetBlindBags(){
   initBlindBags();
 }
 
-function startRandom(){
-  let count = parseInt(document.getElementById("randCount").value) || 1;
-  let genderFilter = document.getElementById("randGender").value;
-  let pool = STUDENTS.filter(s => !genderFilter || s.gender === genderFilter);
-  
-  if(pool.length === 0){
-    document.getElementById("randDisplay").innerHTML = "Không có học sinh nào phù hợp với bộ lọc!";
-    return;
-  }
-  if(count > pool.length){
-    count = pool.length;
-  }
-
-  let displayEl = document.getElementById("randDisplay");
-  let counter = 0;
-  let interval = setInterval(() => {
-    let tempResults = [];
-    let shuffledTemp = [...pool].sort(() => 0.5 - Math.random());
-    for(let i=0; i<count; i++){
-      tempResults.push(shuffledTemp[i].name);
-    }
-    displayEl.innerHTML = tempResults.join(" &bull; ");
-    counter++;
-    if(counter > 15){
-      clearInterval(interval);
-      let finalResults = [];
-      let shuffledFinal = [...pool].sort(() => 0.5 - Math.random());
-      for(let i=0; i<count; i++){
-        finalResults.push(`🎉 ${shuffledFinal[i].name} (${shuffledFinal[i].gender})`);
-      }
-      displayEl.innerHTML = finalResults.join("<br>");
-    }
-  }, 80);
-}
-
-function resetRandom(){
-  document.getElementById("randDisplay").innerHTML = 'Nhấn "Bắt đầu quay" để chọn học sinh!';
-}
-
-let duckList = [];
-let duckIsRacing = false;
-let duckInterval = null;
-let currentDuckWinner = null;
-
-function initDuckRace(){
-  duckList = STUDENTS.map(s => ({...s, pos: 0, speed: 0}));
-  renderDuckTrack();
-}
-
-function renderDuckTrack(){
-  let trackEl = document.getElementById('duckTrack');
-  if(!trackEl) return;
-  let html = '';
-  duckList.forEach((d, index) => {
-    html += `
-      <div class="duck-lane" id="duckLane_${index}">
-        <div class="duck-lane-info" title="${d.name}">#${d.stt} ${d.name}</div>
-        <div class="duck-runway">
-          <div class="duck-icon" id="duckIcon_${index}" style="left: ${d.pos}%;">🦆</div>
-        </div>
-      </div>
-    `;
-  });
-  trackEl.innerHTML = html;
-  document.getElementById('duckStatusInfo').textContent = `Sẵn sàng xuất phát: ${duckList.length} con vịt`;
-}
+// Đua Vịt To Rõ Logic
+let currentDuckStudents = [];
 
 function startDuckRace(){
-  if(duckIsRacing) return;
-  if(duckList.length === 0){
-    alert("Danh sách đua đang trống, vui lòng đặt lại vịt!");
-    return;
+  // Chọn ngẫu nhiên 4 học sinh cho 4 làn đua
+  let shuffled = [...STUDENTS].sort(() => 0.5 - Math.random());
+  currentDuckStudents = shuffled.slice(0, 4);
+  
+  for(let i=0; i<4; i++){
+    document.getElementById(`duckName${i}`).textContent = currentDuckStudents[i].name;
+    document.getElementById(`duckRunner${i}`).style.left = "140px";
   }
-
-  duckIsRacing = true;
-  document.getElementById('startDuckBtn').disabled = true;
-
-  duckList.forEach(d => {
-    d.pos = 0;
-    d.speed = Math.random() * 1.5 + 0.5;
-  });
-
-  duckInterval = setInterval(() => {
+  
+  document.getElementById("duckResultDisplay").innerHTML = "🏁 Cuộc đua đang diễn ra gay cấn... Cố lên nào các chú vịt!";
+  
+  let positions = [140, 140, 140, 140];
+  let trackWidth = document.getElementById("duckTrack").clientWidth - 100;
+  
+  let raceInterval = setInterval(() => {
     let finished = false;
-    duckList.forEach((d, index) => {
-      if(!finished){
-        d.pos += d.speed + (Math.random() * 1.2 - 0.4);
-        if(d.pos >= 92){
-          d.pos = 92;
-          finished = true;
-        }
+    for(let i=0; i<4; i++){
+      positions[i] += Math.floor(Math.random() * 12) + 4;
+      if(positions[i] >= trackWidth){
+        positions[i] = trackWidth;
+        finished = true;
       }
-      let icon = document.getElementById(`duckIcon_${index}`);
-      if(icon){
-        icon.style.left = d.pos + '%';
-      }
-    });
-
+      document.getElementById(`duckRunner${i}`).style.left = positions[i] + "px";
+    }
+    
     if(finished){
-      clearInterval(duckInterval);
-      duckIsRacing = false;
-      document.getElementById('startDuckBtn').disabled = false;
+      clearInterval(raceInterval);
+      // Tìm người về đích đầu tiên
+      let maxPos = Math.max(...positions);
+      let winnerIdx = positions.indexOf(maxPos);
+      let winner = currentDuckStudents[winnerIdx];
       
-      let winner = duckList.reduce((prev, current) => (prev.pos > current.pos) ? prev : current);
-      showDuckWinner(winner);
+      document.getElementById("duckResultDisplay").innerHTML = `🏆 Chấn động! Vịt đại diện cho <b>${winner.name}</b> (${winner.gender}) đã về nhất xuất sắc! 🎉`;
     }
   }, 50);
 }
 
-function showDuckWinner(winner){
-  currentDuckWinner = winner;
-  document.getElementById("duckWinnerContent").innerHTML = `
-    <h3 style="font-size:24px; margin:0; color:var(--text);">${winner.name}</h3>
-    <p class="muted" style="margin:5px 0 0 0;">STT: ${winner.stt} · Mã HS: ${winner.code} · ${winner.gender}</p>
-  `;
-  let overlay = document.getElementById("duckWinnerOverlay");
-  overlay.classList.add("show");
-
-  let autoClose = document.getElementById("duckAutoClose").value;
-  if(autoClose === "yes"){
-    setTimeout(() => {
-      closeDuckWinnerModal();
-    }, 5000);
-  }
-}
-
-function closeDuckWinnerModal(){
-  let overlay = document.getElementById("duckWinnerOverlay");
-  overlay.classList.remove("show");
-
-  let removeWinner = document.getElementById("duckRemoveWinner").value;
-  if(removeWinner === "yes" && currentDuckWinner){
-    duckList = duckList.filter(d => d.code !== currentDuckWinner.code);
-    renderDuckTrack();
-  }
-  currentDuckWinner = null;
-}
-
-function resetDuckRace(){
-  if(duckIsRacing) return;
-  initDuckRace();
-}
-
-window.onload = function(){
-  let savedTheme = localStorage.getItem("class6c_theme");
-  if(savedTheme === "dark"){
-    document.body.classList.add("dark");
-  }
-  renderAll();
-};
-</script>
-</body>
-</html>
+if(localStorage.getItem("class6c_theme")==="dark")document.body.classList.add("dark");renderAll();
+</script></body></html>

@@ -276,6 +276,7 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 </div>
 
 <footer>6C - CK35 · Cô giáo Trần Thị Kim Quy · 45 thành viên · Năm học 2026–2027 · </footer>
+
 <script type="module">
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -300,6 +301,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 </script>
+
 <script>
 const STUDENTS=[
   {stt:1,name:"Bùi Bảo An",code:"2602230123",vemis:"-",moet:"-",regBook:"-",dob:"12/10/2015",entryDate:"18/08/2026",gender:"Nữ",nation:"Việt Nam",address:"Khối Kim Tân, Phường Thái Hòa, Nghệ An",hometown:"Khối Kim Tân, Phường Thái Hòa, Nghệ An",birthPlace:"Bệnh viện đa khoa khu vực Tây Bắc Nghệ An, Phường Tây Hiếu, Nghệ An",origin:"Xã Đô Lương, Nghệ An",birthReg:"Xã Thường Tín, TP. Hà Nội",cccd:"001315024614",cccdDate:"12/08/2024",cccdPlace:"Công an Thái Hoà",ethnic:"Kinh",religion:"Không",policy:"Không",nearPoor:"Không",unionMember:"Không",teamMember:"Không",fatherName:"Bùi Quang Tuấn",fatherJob:"Kỹ sư",fatherYear:"1981",motherName:"Phạm Thị Bích Nga",motherJob:"Kỹ sư",motherYear:"1983",phoneSll:"0986195387",emailSll:"-",phoneDad:"0909330929",phoneMom:"0986195387",phoneHs:"Không",disability:"Không",boarding:"-",note:"-"},
@@ -367,13 +369,10 @@ function renderMoments(){
     return;
   }
 
-  // Sắp xếp các khoảnh khắc theo ngày giảm dần (mới nhất lên trên)
   let sorted = [...MOMENTS].sort((a,b) => new Date(b.date) - new Date(a.date));
-
-  // Nhóm theo ngày-tháng-năm
   let groups = {};
   sorted.forEach(m => {
-    let dKey = m.date; // định dạng YYYY-MM-DD
+    let dKey = m.date;
     if(!groups[dKey]) groups[dKey] = [];
     groups[dKey].push(m);
   });
@@ -538,8 +537,14 @@ function go(id){
   scrollTo({top:0,behavior:"smooth"});
   renderAll();
 }
+
 function initials(n){return n.split(" ").slice(-2).map(x=>x[0]).join("").slice(0,2).toUpperCase()}
-function render(){let q=(document.getElementById("search")?.value||"").toLowerCase(),g=document.getElementById("gender")?.value||"";let list=STUDENTS.filter(s=>(!q||s.name.toLowerCase().includes(q)||s.code.includes(q))&&(!g||s.gender===g));document.getElementById("grid").innerHTML=list.map(s=>`<article class="student" onclick="openStudent(${s.stt})"><div class="studentTop"><div class="avatar">${initials(s.name)}</div><div><h3>${s.name}</h3><div class="studentMeta">${s.gender} · Sinh ${s.dob}</div></div></div><div class="tags"><span class="tag">STT ${s.stt}</span><span class="tag">Mã HS ${s.code}</span></div></article>`).join("")}
+
+function render(){
+  let q=(document.getElementById("search")?.value||"").toLowerCase(),g=document.getElementById("gender")?.value||"";
+  let list=STUDENTS.filter(s=>(!q||s.name.toLowerCase().includes(q)||s.code.includes(q))&&(!g||s.gender===g));
+  document.getElementById("grid").innerHTML=list.map(s=>`<article class="student" onclick="openStudent(${s.stt})"><div class="studentTop"><div class="avatar">${initials(s.name)}</div><div><h3>${s.name}</h3><div class="studentMeta">${s.gender} · Sinh ${s.dob}</div></div></div><div class="tags"><span class="tag">STT ${s.stt}</span><span class="tag">Mã HS ${s.code}</span></div></article>`).join("")
+}
 
 function openStudent(stt){
   let s=STUDENTS.find(x=>x.stt===stt);
@@ -569,12 +574,17 @@ function openStudent(stt){
         <div class="info-item"><span>Ghi chú</span><b>${s.note}</b></div>
       </div>
       <div style="display:flex;gap:10px;margin-top:16px"><button class="btn ghost" onclick="closeModal()">Đóng</button></div>
-    </div>`;
+    `;
   document.getElementById("modal").classList.add("show");
 }
 
 function closeModal(){document.getElementById("modal").classList.remove("show")}
-function theme(){document.body.classList.toggle("dark");localStorage.setItem("class6c_theme",document.body.classList.contains("dark")?"dark":"light")}
+
+function theme(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("class6c_theme",document.body.classList.contains("dark")?"dark":"light");
+}
+
 function renderAll(){
   document.getElementById("boys").textContent=STUDENTS.filter(s=>s.gender==="Nam").length;
   document.getElementById("girls").textContent=STUDENTS.filter(s=>s.gender==="Nữ").length;
@@ -584,7 +594,6 @@ function renderAll(){
   renderMoments();
 }
 
-// Sub-tab switcher inside Random Tab
 function switchRandomTab(tab){
   document.getElementById('btnTabBags').classList.remove('active');
   document.getElementById('btnTabSpin').classList.remove('active');
@@ -605,7 +614,6 @@ function switchRandomTab(tab){
   }
 }
 
-// Blind Bags Logic
 let shuffledBagStudents = [];
 let openedBagsState = {};
 
@@ -662,7 +670,6 @@ function resetBlindBags(){
   initBlindBags();
 }
 
-// Randomizer Logic
 function startRandom(){
   let count = parseInt(document.getElementById("randCount").value) || 1;
   let genderFilter = document.getElementById("randGender").value;
@@ -700,131 +707,121 @@ function startRandom(){
 
 function resetRandom(){
   document.getElementById("randDisplay").innerHTML = 'Nhấn "Bắt đầu quay" để chọn học sinh!';
-  document.getElementById("randCount").value = 1;
-  document.getElementById("randGender").value = "";
 }
 
-// Duck Race Logic
-let activeDuckStudents = [];
-let duckRaceInterval = null;
-let autoCloseDuckTimer = null;
+// Đua Vịt
+let duckList = [];
+let duckIsRacing = false;
+let duckInterval = null;
 
 function initDuckRace(){
-  activeDuckStudents = [...STUDENTS];
+  duckList = STUDENTS.map(s => ({...s, pos: 0, speed: 0}));
   renderDuckTrack();
 }
 
 function renderDuckTrack(){
-  let trackEl = document.getElementById("duckTrack");
+  let trackEl = document.getElementById('duckTrack');
   if(!trackEl) return;
-  document.getElementById("duckStatusInfo").textContent = `Sẵn sàng xuất phát: ${activeDuckStudents.length} con vịt`;
-  
   let html = '';
-  activeDuckStudents.forEach((s, idx) => {
+  duckList.forEach((d, index) => {
     html += `
-      <div class="duck-lane" id="duckLane_${idx}">
-        <div class="duck-lane-info" title="${s.name}">🦆 #${idx+1} ${s.name}</div>
+      <div class="duck-lane" id="duckLane_${index}">
+        <div class="duck-lane-info" title="${d.name}">#${d.stt} ${d.name}</div>
         <div class="duck-runway">
-          <div class="duck-icon" id="duck_${idx}" style="left: 0%;">🦆</div>
+          <div class="duck-icon" id="duckIcon_${index}" style="left: ${d.pos}%;">🦆</div>
         </div>
       </div>
     `;
   });
   trackEl.innerHTML = html;
+  document.getElementById('duckStatusInfo').textContent = `Sẵn sàng xuất phát: ${duckList.length} con vịt`;
 }
 
 function startDuckRace(){
-  if(activeDuckStudents.length === 0){
-    alert("Danh sách vịt trống! Hãy đặt lại danh sách.");
+  if(duckIsRacing) return;
+  if(duckList.length === 0){
+    alert("Danh sách đua đang trống, vui lòng đặt lại vịt!");
     return;
   }
-  
-  let btn = document.getElementById("startDuckBtn");
-  btn.disabled = true;
-  btn.style.opacity = "0.6";
+  duckIsRacing = true;
+  document.getElementById('startDuckBtn').disabled = true;
 
-  let duckSpeeds = activeDuckStudents.map(() => 0.4 + Math.random() * 1.2);
-  let duckPositions = activeDuckStudents.map(() => 0);
-  let finished = false;
+  duckList.forEach(d => {
+    d.pos = 0;
+    d.speed = Math.random() * 1.5 + 0.8;
+  });
 
-  duckRaceInterval = setInterval(() => {
-    let maxPos = 0;
-    let winnerIdx = -1;
+  duckInterval = setInterval(() => {
+    let finished = false;
+    let winnerIndex = -1;
 
-    for(let i=0; i<activeDuckStudents.length; i++){
-      duckPositions[i] += duckSpeeds[i] + (Math.random() * 0.8 - 0.3);
-      if(duckPositions[i] > 92) duckPositions[i] = 92;
+    duckList.forEach((d, index) => {
+      d.speed += (Math.random() - 0.45) * 0.4;
+      if(d.speed < 0.4) d.speed = 0.4;
+      if(d.speed > 3.5) d.speed = 3.5;
 
-      let iconEl = document.getElementById(`duck_${i}`);
+      d.pos += d.speed;
+      if(d.pos >= 92){
+        d.pos = 92;
+        if(!finished){
+          finished = true;
+          winnerIndex = index;
+        }
+      }
+
+      let iconEl = document.getElementById(`duckIcon_${index}`);
       if(iconEl){
-        iconEl.style.left = duckPositions[i] + '%';
+        iconEl.style.left = d.pos + '%';
       }
+    });
 
-      if(duckPositions[i] > maxPos){
-        maxPos = duckPositions[i];
-        winnerIdx = i;
-      }
-    }
-
-    if(maxPos >= 92 && !finished){
-      finished = true;
-      clearInterval(duckRaceInterval);
-      
-      let winnerStudent = activeDuckStudents[winnerIdx];
-      showDuckWinner(winnerStudent, winnerIdx);
+    if(finished){
+      clearInterval(duckInterval);
+      duckIsRacing = false;
+      document.getElementById('startDuckBtn').disabled = false;
+      let winner = duckList[winnerIndex];
+      showDuckWinner(winner);
     }
   }, 50);
 }
 
-function showDuckWinner(student, index){
-  let contentHtml = `
-    <h3 style="font-size:24px; margin:0 0 8px 0; color:var(--text);">${student.name}</h3>
-    <p class="muted" style="margin:0;">Vịt số #${index+1} · Giới tính: ${student.gender} · Sinh: ${student.dob}</p>
+function showDuckWinner(winner){
+  let contentEl = document.getElementById('duckWinnerContent');
+  contentEl.innerHTML = `
+    <h3 style="font-size:24px; margin:0; color:var(--text);">${winner.name}</h3>
+    <p class="muted" style="margin:5px 0 0 0;">Mã HS: ${winner.code} · Giới tính: ${winner.gender}</p>
   `;
-  document.getElementById("duckWinnerContent").innerHTML = contentHtml;
-  document.getElementById("duckWinnerOverlay").classList.add("show");
+  let overlay = document.getElementById('duckWinnerOverlay');
+  overlay.classList.add('show');
 
-  let removeWinnerOption = document.getElementById("duckRemoveWinner").value;
-  if(removeWinnerOption === 'yes'){
-    activeDuckStudents.splice(index, 1);
+  let removeWinner = document.getElementById('duckRemoveWinner').value;
+  if(removeWinner === 'yes'){
+    duckList = duckList.filter(d => d.stt !== winner.stt);
   }
 
-  let autoCloseOption = document.getElementById("duckAutoClose").value;
-  if(autoCloseOption === 'yes'){
-    autoCloseDuckTimer = setTimeout(() => {
+  let autoClose = document.getElementById('duckAutoClose').value;
+  if(autoClose === 'yes'){
+    setTimeout(() => {
       closeDuckWinnerModal();
     }, 5000);
   }
 }
 
 function closeDuckWinnerModal(){
-  if(autoCloseDuckTimer){
-    clearTimeout(autoCloseDuckTimer);
-    autoCloseDuckTimer = null;
-  }
-  document.getElementById("duckWinnerOverlay").classList.remove("show");
-  
-  let btn = document.getElementById("startDuckBtn");
-  btn.disabled = false;
-  btn.style.opacity = "1";
-
+  let overlay = document.getElementById('duckWinnerOverlay');
+  overlay.classList.remove('show');
   renderDuckTrack();
 }
 
 function resetDuckRace(){
-  if(duckRaceInterval) clearInterval(duckRaceInterval);
-  if(autoCloseDuckTimer) clearTimer(autoCloseDuckTimer);
-  document.getElementById("duckWinnerOverlay").classList.remove("show");
-
-  let btn = document.getElementById("startDuckBtn");
-  btn.disabled = false;
-  btn.style.opacity = "1";
-
+  if(duckIsRacing) return;
   initDuckRace();
 }
 
-window.onload=function(){
-  if(localStorage.getItem("class6c_theme")==="dark") document.body.classList.add("dark");
+window.onload = function(){
+  if(localStorage.getItem("class6c_theme")==="dark"){
+    document.body.classList.add("dark");
+  }
   renderAll();
 };
 </script>

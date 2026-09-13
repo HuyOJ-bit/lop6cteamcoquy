@@ -158,7 +158,6 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 <section id="students" class="page" style="display:none"><div class="head"><div><h2>Danh sách 45 thành viên</h2><p class="muted">Bấm vào học sinh để xem chi tiết lý lịch thông tin.</p></div></div>
 <div class="toolbar"><input id="search" class="search" placeholder="Tìm theo tên hoặc mã học sinh..." oninput="render()"><select id="gender" onchange="render()"><option value="">Tất cả giới tính</option><option>Nam</option><option>Nữ</option></select></div><div id="grid" class="grid"></div></section>
 
-<!-- Tab Khoảnh Khắc Mới Thêm (3 nút chức năng riêng biệt tải tệp) -->
 <section id="moments" class="page" style="display:none">
   <div class="head">
     <div>
@@ -171,13 +170,9 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
       <button class="btn" onclick="openAddMomentModal('video')">🎬 Thêm video</button>
     </div>
   </div>
-  
-  <div id="momentsContainer">
-    <!-- Các nhóm khoảnh khắc theo ngày tháng năm sẽ hiển thị ở đây -->
-  </div>
+  <div id="momentsContainer"></div>
 </section>
 
-<!-- Tab Quay Random & Trò Chơi -->
 <section id="randomizer" class="page" style="display:none">
   <div class="head">
     <div>
@@ -192,7 +187,6 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
     <button class="sub-tab-btn" id="btnTabDuck" onclick="switchRandomTab('duck')">🦆 Đua Vịt Học Sinh</button>
   </div>
 
-  <!-- Sub Tab 1: Xé túi mù -->
   <div id="subContentBags" class="random-box">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
       <p class="muted" style="margin:0">Bấm vào từng túi mù để xé và xem tên học sinh bên trong (Xếp lộn xộn ngẫu nhiên).</p>
@@ -201,7 +195,6 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
     <div id="bagsGrid" class="bags-grid"></div>
   </div>
 
-  <!-- Sub Tab 2: Quay ngẫu nhiên -->
   <div id="subContentSpin" class="random-box" style="display:none;">
     <div class="settings-box">
       <div class="field">
@@ -224,7 +217,6 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
     </div>
   </div>
 
-  <!-- Sub Tab 3: Đua Vịt Học Sinh -->
   <div id="subContentDuck" class="random-box" style="display:none;">
     <div class="settings-box">
       <div class="field">
@@ -261,14 +253,11 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="content"></div></div></div>
 
-<!-- Popup thông báo Vịt về đích -->
 <div id="duckWinnerOverlay" onclick="closeDuckWinnerModal()">
   <div class="duck-winner-card" onclick="event.stopPropagation()">
     <div class="eyebrow">🏆 KẾT QUẢ ĐUA VỊT</div>
     <h2 style="color:var(--brand); font-size:28px; margin:10px 0;">🎉 Vịt Về Đích Đầu Tiên!</h2>
-    <div id="duckWinnerContent" style="background:rgba(13,148,136,0.08); padding:20px; border-radius:16px; margin:20px 0; border:2px dashed var(--brand);">
-      <!-- Thông tin vịt thắng -->
-    </div>
+    <div id="duckWinnerContent" style="background:rgba(13,148,136,0.08); padding:20px; border-radius:16px; margin:20px 0; border:2px dashed var(--brand);"></div>
     <div style="display:flex; gap:10px; justify-content:center;">
       <button class="btn" onclick="closeDuckWinnerModal()">Xác nhận</button>
     </div>
@@ -735,51 +724,56 @@ function startDuckRace(){
     alert("Danh sách đua đang trống, vui lòng đặt lại vịt!");
     return;
   }
+
   duckIsRacing = true;
   document.getElementById('startDuckBtn').disabled = true;
 
   duckList.forEach(d => {
     d.pos = 0;
-    d.speed = Math.random() * 1.5 + 0.8;
+    d.speed = Math.random() * 1.5 + 0.5;
   });
 
   duckInterval = setInterval(() => {
     let finished = false;
     duckList.forEach((d, index) => {
       if(!finished){
-        d.pos += d.speed + (Math.random() * 2 - 1);
-        if(d.pos < 0) d.pos = 0;
+        d.pos += d.speed + (Math.random() * 1.2 - 0.4);
         if(d.pos >= 92){
           d.pos = 92;
           finished = true;
-          endDuckRace(d, index);
         }
       }
       let icon = document.getElementById(`duckIcon_${index}`);
-      if(icon) icon.style.left = d.pos + '%';
+      if(icon){
+        icon.style.left = d.pos + '%';
+      }
     });
+
+    if(finished){
+      clearInterval(duckInterval);
+      duckIsRacing = false;
+      document.getElementById('startDuckBtn').disabled = false;
+      
+      let winner = duckList.reduce((prev, current) => (prev.pos > current.pos) ? prev : current);
+      showDuckWinner(winner);
+    }
   }, 50);
 }
 
-function endDuckRace(winner, index){
-  clearInterval(duckInterval);
-  duckIsRacing = false;
-  document.getElementById('startDuckBtn').disabled = false;
-  
-  let removeWinner = document.getElementById('duckRemoveWinner').value;
-  let autoClose = document.getElementById('duckAutoClose').value;
-
-  document.getElementById('duckWinnerContent').innerHTML = `
+function showDuckWinner(winner){
+  let content = `
     <h3 style="font-size:24px; margin:0; color:var(--text);">${winner.name}</h3>
     <p class="muted" style="margin:5px 0 0 0;">STT: ${winner.stt} · Giới tính: ${winner.gender} · Sinh: ${winner.dob}</p>
   `;
+  document.getElementById('duckWinnerContent').innerHTML = content;
   document.getElementById('duckWinnerOverlay').classList.add('show');
 
+  let removeWinner = document.getElementById('duckRemoveWinner').value;
   if(removeWinner === 'yes'){
-    duckList = duckList.filter((_, idx) => idx !== index);
-    renderDuckTrack();
+    duckList = duckList.filter(d => d.code !== winner.code);
   }
 
+  let autoClose = document.getElementById('duckAutoClose').value;
   if(autoClose === 'yes'){
     setTimeout(() => {
       closeDuckWinnerModal();
@@ -789,6 +783,7 @@ function endDuckRace(winner, index){
 
 function closeDuckWinnerModal(){
   document.getElementById('duckWinnerOverlay').classList.remove('show');
+  renderDuckTrack();
 }
 
 function resetDuckRace(){

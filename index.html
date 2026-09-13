@@ -158,14 +158,18 @@ footer{border-top:1px solid var(--line);padding:36px 20px;text-align:center;colo
 <section id="students" class="page" style="display:none"><div class="head"><div><h2>Danh sách 45 thành viên</h2><p class="muted">Bấm vào học sinh để xem chi tiết lý lịch thông tin.</p></div></div>
 <div class="toolbar"><input id="search" class="search" placeholder="Tìm theo tên hoặc mã học sinh..." oninput="render()"><select id="gender" onchange="render()"><option value="">Tất cả giới tính</option><option>Nam</option><option>Nữ</option></select></div><div id="grid" class="grid"></div></section>
 
-<!-- Tab Khoảnh Khắc Mới Thêm -->
+<!-- Tab Khoảnh Khắc Mới Thêm (3 nút chức năng riêng biệt tải tệp) -->
 <section id="moments" class="page" style="display:none">
   <div class="head">
     <div>
       <h2>📸 Khoảnh Khắc Đáng Nhớ</h2>
       <p class="muted">Chia sẻ bài viết, hình ảnh và video ghi lại những kỷ niệm đẹp của lớp, tự động phân chia theo ngày tháng năm.</p>
     </div>
-    <button class="btn" onclick="openAddMomentModal()">➕ Thêm khoảnh khắc</button>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <button class="btn" onclick="openAddMomentModal('post')">📝 Thêm bài viết</button>
+      <button class="btn" onclick="openAddMomentModal('img')">🖼️ Thêm ảnh</button>
+      <button class="btn" onclick="openAddMomentModal('video')">🎬 Thêm video</button>
+    </div>
   </div>
   
   <div id="momentsContainer">
@@ -335,7 +339,7 @@ function renderMoments(){
   if(!container) return;
 
   if(MOMENTS.length === 0){
-    container.innerHTML = `<div class="card" style="padding:40px; text-align:center;"><p class="muted">Chưa có khoảnh khắc nào được đăng tải. Hãy bấm "Thêm khoảnh khắc" để bắt đầu!</p></div>`;
+    container.innerHTML = `<div class="card" style="padding:40px; text-align:center;"><p class="muted">Chưa có khoảnh khắc nào được đăng tải. Hãy bấm các nút thêm phía trên để bắt đầu!</p></div>`;
     return;
   }
 
@@ -353,7 +357,6 @@ function renderMoments(){
   let html = '';
   for(let dateKey in groups){
     let items = groups[dateKey];
-    // Chuyển đổi định dạng hiển thị ngày đẹp hơn (DD/MM/YYYY)
     let parts = dateKey.split('-');
     let displayDate = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dateKey;
 
@@ -370,7 +373,7 @@ function renderMoments(){
       let mediaHtml = '';
       if(item.type === 'video' && item.url){
         mediaHtml = `<div class="moment-media-box"><video src="${item.url}" controls></video></div>`;
-      } else if(item.url){
+      } else if(item.type === 'img' && item.url){
         mediaHtml = `<div class="moment-media-box"><img src="${item.url}" alt="Khoảnh khắc lớp 6C" onerror="this.parentElement.style.display='none'"></div>`;
       }
 
@@ -398,73 +401,90 @@ function escapeHtml(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
-function openAddMomentModal(){
+function openAddMomentModal(mode){
   let todayStr = new Date().toISOString().split('T')[0];
+  let titleText = "THÊM BÀI VIẾT";
+  let descText = "Chia sẻ dòng cảm nghĩ, thông báo hoặc câu chuyện của lớp.";
+  let showFileField = false;
+  let acceptType = "";
+  let modeLabel = "";
+
+  if(mode === 'img'){
+    titleText = "THÊM ẢNH KỶ NIỆM";
+    descText = "Tải lên hình ảnh từ tệp thiết bị của bạn.";
+    showFileField = true;
+    acceptType = "image/*";
+    modeLabel = "Chọn tệp hình ảnh:";
+  } else if(mode === 'video'){
+    titleText = "THÊM VIDEO KỶ NIỆM";
+    descText = "Tải lên video từ tệp thiết bị của bạn.";
+    showFileField = true;
+    acceptType = "video/*";
+    modeLabel = "Chọn tệp video:";
+  }
+
   document.getElementById("content").innerHTML=`
-    <div class="eyebrow">THÊM KHOẢNH KHẮC MỚI</div>
-    <h2>Đăng bài & Kỷ niệm</h2>
-    <p class="muted">Chia sẻ hình ảnh, video hoặc bài viết để mọi người cùng chiêm ngưỡng.</p>
+    <div class="eyebrow">${titleText}</div>
+    <h2>Đăng kỷ niệm mới</h2>
+    <p class="muted">${descText}</p>
     
     <div style="margin-top:20px;" class="formgrid">
       <div class="field full">
-        <label>Nội dung / Viết bài viết:</label>
-        <textarea id="momentText" placeholder="Nhập cảm nghĩ hoặc mô tả khoảng khắc đáng nhớ..."></textarea>
-      </div>
-      <div class="field">
-        <label>Ngày diễn ra (Phân chia ngày/tháng/năm):</label>
-        <input type="date" id="momentDate" value="${todayStr}">
-      </div>
-      <div class="field">
-        <label>Loại tệp đính kèm:</label>
-        <select id="momentType" onchange="toggleMediaInputType()">
-          <option value="img">Hình ảnh (URL hoặc Link ảnh)</option>
-          <option value="video">Video (URL hoặc Link video)</option>
-        </select>
+        <label>Nội dung mô tả / Viết bài viết:</label>
+        <textarea id="momentText" placeholder="Nhập nội dung chia sẻ..."></textarea>
       </div>
       <div class="field full">
-        <label id="momentUrlLabel">Đường dẫn (URL) hình ảnh:</label>
-        <input type="text" id="momentUrl" placeholder="Dán link ảnh hoặc tên file (ví dụ: anh1.jpg)...">
+        <label>Ngày diễn ra (Phân chia ngày/tháng/năm):</label>
+        <input type="date" id="momentDate" value="${todayStr}" style="width:100%">
       </div>
+      ${showFileField ? `
+      <div class="field full">
+        <label>${modeLabel}</label>
+        <input type="file" id="momentFile" accept="${acceptType}" style="width:100%">
+      </div>` : ''}
     </div>
     
     <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
       <button class="btn ghost" onclick="closeModal()">Hủy</button>
-      <button class="btn" onclick="saveNewMoment()">Đăng khoảnh khắc</button>
+      <button class="btn" onclick="saveNewMoment('${mode}')">Đăng khoảnh khắc</button>
     </div>`;
   document.getElementById("modal").classList.add("show");
 }
 
-function toggleMediaInputType(){
-  let type = document.getElementById("momentType").value;
-  let label = document.getElementById("momentUrlLabel");
-  let input = document.getElementById("momentUrl");
-  if(type === 'video'){
-    label.textContent = "Đường dẫn (URL) video:";
-    input.placeholder = "Dán link video (mp4)...";
-  } else {
-    label.textContent = "Đường dẫn (URL) hình ảnh:";
-    input.placeholder = "Dán link ảnh hoặc tên file...";
-  }
-}
-
-function saveNewMoment(){
+function saveNewMoment(mode){
   let text = document.getElementById("momentText").value.trim();
   let date = document.getElementById("momentDate").value;
-  let type = document.getElementById("momentType").value;
-  let url = document.getElementById("momentUrl").value.trim();
 
   if(!date){
     alert("Vui lòng chọn ngày tháng năm cho khoảnh khắc!");
     return;
   }
-  if(!text && !url){
-    alert("Vui lòng nhập nội dung hoặc đính kèm hình ảnh/video!");
-    return;
-  }
 
+  if(mode === 'post'){
+    if(!text){
+      alert("Vui lòng nhập nội dung bài viết!");
+      return;
+    }
+    finishSaveMoment(text, date, 'post', '');
+  } else {
+    let fileInput = document.getElementById("momentFile");
+    if(fileInput && fileInput.files && fileInput.files[0]){
+      let file = fileInput.files[0];
+      let reader = new FileReader();
+      reader.onload = function(e){
+        finishSaveMoment(text || (mode === 'img' ? "Hình ảnh kỷ niệm" : "Video kỷ niệm"), date, mode, e.target.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert("Vui lòng chọn tệp tải lên từ thiết bị!");
+    }
+  }
+}
+
+function finishSaveMoment(text, date, type, url){
   let newObj = {
     id: Date.now(),
-    text: text || "Khoảnh khắc đáng nhớ của lớp 6C",
+    text: text,
     date: date,
     type: type,
     url: url
@@ -748,15 +768,14 @@ function handleDuckWinner(winnerIdx){
 
   let contentHtml = `
     <h3 style="font-size:24px; margin:0; color:var(--text);">${winner.name}</h3>
-    <p class="muted" style="margin:6px 0 0 0;">Mã HS: ${winner.code} · Giới tính: ${winner.gender} · Sinh: ${winner.dob}</p>
+    <p class="muted" style="margin:6px 0 0 0;">Mã HS: ${winner.code} · Giới tính: ${winner.gender}</p>
   `;
   document.getElementById("duckWinnerContent").innerHTML = contentHtml;
-  
-  let overlay = document.getElementById("duckWinnerOverlay");
-  overlay.classList.add("show");
+  document.getElementById("duckWinnerOverlay").classList.add("show");
 
   if(removeWinnerVal === 'yes'){
     activeDuckStudents.splice(winnerIdx, 1);
+    renderDuckTrack();
   }
 
   if(autoCloseVal === 'yes'){
@@ -769,15 +788,20 @@ function handleDuckWinner(winnerIdx){
 
 function closeDuckWinnerModal(){
   if(autoCloseDuckTimer) clearTimeout(autoCloseDuckTimer);
-  let overlay = document.getElementById("duckWinnerOverlay");
-  overlay.classList.remove("show");
-  renderDuckTrack();
+  document.getElementById("duckWinnerOverlay").classList.remove("show");
 }
 
 function resetDuckRace(){
-  if(duckRaceInterval) clearInterval(duckRaceInterval);
   initDuckRace();
 }
 
-if(localStorage.getItem("class6c_theme")==="dark")document.body.classList.add("dark");renderAll();
-</script></body></html>
+window.onload = function(){
+  let savedTheme = localStorage.getItem("class6c_theme");
+  if(savedTheme === "dark"){
+    document.body.classList.add("dark");
+  }
+  renderAll();
+};
+</script>
+</body>
+</html>

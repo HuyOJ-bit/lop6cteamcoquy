@@ -694,6 +694,7 @@ function resetRandom(){
 let duckList = [];
 let duckIsRacing = false;
 let duckInterval = null;
+let currentDuckWinner = null;
 
 function initDuckRace(){
   duckList = STUDENTS.map(s => ({...s, pos: 0, speed: 0}));
@@ -761,20 +762,16 @@ function startDuckRace(){
 }
 
 function showDuckWinner(winner){
-  let content = `
+  currentDuckWinner = winner;
+  document.getElementById("duckWinnerContent").innerHTML = `
     <h3 style="font-size:24px; margin:0; color:var(--text);">${winner.name}</h3>
-    <p class="muted" style="margin:5px 0 0 0;">STT: ${winner.stt} · Giới tính: ${winner.gender} · Sinh: ${winner.dob}</p>
+    <p class="muted" style="margin:5px 0 0 0;">STT: ${winner.stt} · Mã HS: ${winner.code} · ${winner.gender}</p>
   `;
-  document.getElementById('duckWinnerContent').innerHTML = content;
-  document.getElementById('duckWinnerOverlay').classList.add('show');
+  let overlay = document.getElementById("duckWinnerOverlay");
+  overlay.classList.add("show");
 
-  let removeWinner = document.getElementById('duckRemoveWinner').value;
-  if(removeWinner === 'yes'){
-    duckList = duckList.filter(d => d.code !== winner.code);
-  }
-
-  let autoClose = document.getElementById('duckAutoClose').value;
-  if(autoClose === 'yes'){
+  let autoClose = document.getElementById("duckAutoClose").value;
+  if(autoClose === "yes"){
     setTimeout(() => {
       closeDuckWinnerModal();
     }, 5000);
@@ -782,8 +779,15 @@ function showDuckWinner(winner){
 }
 
 function closeDuckWinnerModal(){
-  document.getElementById('duckWinnerOverlay').classList.remove('show');
-  renderDuckTrack();
+  let overlay = document.getElementById("duckWinnerOverlay");
+  overlay.classList.remove("show");
+
+  let removeWinner = document.getElementById("duckRemoveWinner").value;
+  if(removeWinner === "yes" && currentDuckWinner){
+    duckList = duckList.filter(d => d.code !== currentDuckWinner.code);
+    renderDuckTrack();
+  }
+  currentDuckWinner = null;
 }
 
 function resetDuckRace(){
